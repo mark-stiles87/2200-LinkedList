@@ -29,7 +29,7 @@ public:
 	//Result: The current node is deleted, cursor points to the next node (or the head if the deleted node was at the end).
     void replace(const DataType&);
     void clear();
-    bool isEmpty() const;
+    bool isEmpty() const; // returns true if head is null, false if head is not null
     bool isFull() const;
     void gotoBeginning();
     void gotoEnd();
