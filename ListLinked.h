@@ -24,20 +24,27 @@ public:
 	void insert(const DataType&);//Creates a new node after the cursor position.
 	//Requires: A valid object of type DataType.
 	//Result: A new node inserted after the cursor.
-    void remove();
+    void remove(); //Deletes the cursor node, moving the cursor to the next node.
+	//Requires: A non-empty list.
+	//Result: The current node is deleted, cursor points to the next node (or the head if the deleted node was at the end).
     void replace(const DataType&);
     void clear();
     bool isEmpty() const;
     bool isFull() const;
     void gotoBeginning();
-    void gotoEnd() throw;
-    bool gotoNext() throw;
-    bool gotoPrior() throw;
+    void gotoEnd();
+    bool gotoNext();
+    bool gotoPrior();
     DataType getCursor() const;
-	bool operator==(const List<DataType>&) const;
+	bool operator==(const List<DataType>&) const; //Equality operator, calls equalityHelper to check every node in both trees.
+	//Requires: Another List of the same DataType.
+	//Result: Returns the equality of the two Lists.
 	ListNode<DataType>* assignHelper(ListNode<DataType>*&, const ListNode<DataType>*); //Recursive helper for assignment operator.
 	//Requires: A NULL pointer and a pointer to a valid node.
 	//Result: Recursively creates the new list.
+	bool equalityHelper(const ListNode<DataType>*, const ListNode<DataType>*) const; //Recursive helper for equality operator.
+	//Requires: Two node pointers.
+	//Result: Recursively returns the equality of the nodes and their children.
 
 	// Programming exercise 2
 	// void moveToBeginning () throw (logic_error);
@@ -108,6 +115,41 @@ void List<DataType>::insert(const DataType& newDataItem)
 }
 
 template <typename DataType>
+void List<DataType>::remove()
+{
+	if (NULL != cursor)
+	{
+		ListNode<DataType>* temp = cursor->next;
+		if (gotoPrior())
+		{
+			delete cursor->next;
+			cursor->next = temp;
+		}
+		else
+		{
+			head = cursor->next;
+			delete cursor;
+		}
+	}
+	return;
+}
+
+template <typename DataType>
+bool List<DataType>::isEmpty() const
+{
+	if (head == NULL)
+		return true;
+	else
+		return false;
+}
+
+template<typename DataType>
+bool List<DataType>::operator==(const List<DataType>& other) const
+{
+	return equalityHelper(head, other.head);
+}
+
+template <typename DataType>
 ListNode<DataType>* List<DataType>::assignHelper(ListNode<DataType>*& here, const ListNode<DataType>* other)
 {
 	here = new ListNode<DataType>(other->dataItem);
@@ -118,18 +160,21 @@ ListNode<DataType>* List<DataType>::assignHelper(ListNode<DataType>*& here, cons
 }
 
 template <typename DataType>
+bool List<DataType>::equalityHelper(const ListNode<DataType>* here, const ListNode<DataType>* other) const
+{
+	if (here->dataItem != other->dataItem)
+		return 0;
+	else if ((NULL == here->next) && (NULL != other->next))
+		return 0;
+	else if ((NULL != here->next) && (NULL == other->next))
+		return 0;
+	else
+		return equalityHelper(here->next, other->next);
+}
+
+template <typename DataType>
 ListNode<DataType>::ListNode(const DataType& nodeData, ListNode<DataType>* nextPtr)
 {
 	dataItem = nodeData;
 	next = nextPtr;
-}
-
-template <typename DataType>
-bool List<DataType>::isEmpty() const
-{
-	if (head == NULL)
-		return true;
-
-	else
-		return false;
 }
