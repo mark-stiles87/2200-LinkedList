@@ -123,3 +123,13 @@ ListNode<DataType>::ListNode(const DataType& nodeData, ListNode<DataType>* nextP
 	dataItem = nodeData;
 	next = nextPtr;
 }
+
+template <typename DataType>
+bool List<DataType>::isEmpty() const
+{
+	if (head == NULL)
+		return true;
+
+	else
+		return false;
+}
