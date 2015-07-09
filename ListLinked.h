@@ -1,16 +1,31 @@
-//--------------------------------------------------------------------
-//
-//  Laboratory 5                                          ListLinked.h
-//
-//  Class declaration for the linked implementation of the List ADT
-//
-//--------------------------------------------------------------------
+/*--------------------------------------------------------------------*\
 
+	CSC2200 - Laboratory 5 - 07/15/2015             ListLinked.h
+
+	Class declaration for the linked implementation of the List ADT
+
+	System Architect: Benjamin Ciaglo
+	Data Architect: Mark Stiles
+	Developer: Anthony Mauro
+	
+\*--------------------------------------------------------------------*/
+
+/**********************************************************************\
+	Dates compiled and results:
+ 	07/09/15:
+ 		- This is an Example...Please change accordingly.
+ 		- Tested gotoBeginning. Function worked fine.
+ 		- Tested isFull. Function failed to compile.
+ 	
+\**********************************************************************/
+
+// Header //
 #pragma once
 #include <stdexcept>
 #include <iostream>
 using namespace std;
 
+// Classes //
 template <typename DataType>
 class ListNode;
 
@@ -30,12 +45,12 @@ public:
     void replace(const DataType&);
     void clear();
     bool isEmpty() const; // returns true if head is null, false if head is not null
-    bool isFull() const;
-    void gotoBeginning();
-    void gotoEnd();
-    bool gotoNext();
-    bool gotoPrior();
-    DataType getCursor() const;
+    bool isFull() const; // returns true if head is not null, false if the head is null
+    void gotoBeginning(); // sets curser at beginning of the list
+    void gotoEnd(); // sets curser at the end of the list
+    bool gotoNext(); // moves curser to the next item in the list
+    bool gotoPrior(); // moves curser to the previous item in the list
+    DataType getCursor() const; // returns the value stored at curser
 	bool operator==(const List<DataType>&) const; //Equality operator, calls equalityHelper to check every node in both trees.
 	//Requires: Another List of the same DataType.
 	//Result: Returns the equality of the two Lists.
@@ -71,6 +86,8 @@ public:
 	ListNode<DataType>* next;
 };
 
+
+// Function Definitions //
 template <typename DataType>
 List<DataType>::List(int ignored = 0)
 {
@@ -141,6 +158,61 @@ bool List<DataType>::isEmpty() const
 		return true;
 	else
 		return false;
+}
+
+template <typename DataType>
+bool List<DataType>::isFull() const
+{
+	if (head == NULL)
+		return false;
+	else
+		return true;
+}
+
+template <typename DataType>
+void List<DataType>::gotoDeginning()
+{
+	curser = head;
+	return;
+}
+
+template <typename DataType>
+void List<DataType>::gotoEnd()
+{
+	if (curser->next == NULL)
+		return;
+	curser = curser->next;
+	gotoEnd();
+}
+
+template <typename DataType>
+void List<DataType>::gotoNext()
+{
+	curser = curser->next;
+	return;
+}
+
+template <typename DataType>
+void List<DataType>::gotoPrior()
+{
+	ListNode<DataType>* temp = head;
+	
+	while (temp != NULL && temp != curser)
+	{
+		if (temp->next == curser)
+		{
+			curser = temp;
+			return;
+		}
+		temp = temp->next;
+	}
+	return;
+}
+
+template <typename DataType>
+DataType List<DtatType>::getCurser() const
+{
+	return *curser;
 }
 
 template<typename DataType>
