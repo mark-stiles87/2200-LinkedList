@@ -1,22 +1,22 @@
 /*--------------------------------------------------------------------*\
 
-	CSC2200 - Laboratory 5 - 07/15/2015             ListLinked.h
+CSC2200 - Laboratory 5 - 07/15/2015             ListLinked.h
 
-	Class declaration for the linked implementation of the List ADT
+Class declaration for the linked implementation of the List ADT
 
-	System Architect: Benjamin Ciaglo
-	Data Architect: Mark Stiles
-	Developer: Anthony Mauro
-	
+System Architect: Benjamin Ciaglo
+Data Architect: Mark Stiles
+Developer: Anthony Mauro
+
 \*--------------------------------------------------------------------*/
 
 /**********************************************************************\
-	Dates compiled and results:
- 	07/09/15:
- 		- This is an Example...Please change accordingly.
- 		- Tested gotoBeginning. Function worked fine.
- 		- Tested isFull. Function failed to compile.
- 	
+Dates compiled and results:
+07/09/15:
+- This is an Example...Please change accordingly.
+- Tested gotoBeginning. Function worked fine.
+- Tested isFull. Function failed to compile.
+
 \**********************************************************************/
 
 // Header //
@@ -33,24 +33,28 @@ template <typename DataType>
 class List {
 public:
 	List(int = 0); //Default constructor, creates an empty list.
-    List(const List<DataType>&); //Copy constructor, creates an empty list then calls assignment.
-    List<DataType>& operator=(const List<DataType>&); //Assignment operator, calls overloaded equality to avoid self-assignment.
-    ~List(); //Destructor, calls remove recursively.
+	List(const List<DataType>&); //Copy constructor, creates an empty list then calls assignment.
+	List<DataType>& operator=(const List<DataType>&); //Assignment operator, calls overloaded equality to avoid self-assignment.
+	~List(); //Destructor, calls clear.
 	void insert(const DataType&);//Creates a new node after the cursor position.
 	//Requires: A valid object of type DataType.
 	//Result: A new node inserted after the cursor.
-    void remove(); //Deletes the cursor node, moving the cursor to the next node.
+	void remove(); //Deletes the cursor node, moving the cursor to the next node.
 	//Requires: A non-empty list.
 	//Result: The current node is deleted, cursor points to the next node (or the head if the deleted node was at the end).
-    void replace(const DataType&);
-    void clear();
-    bool isEmpty() const; // returns true if head is null, false if head is not null
-    bool isFull() const; // returns true if head is not null, false if the head is null
-    void gotoBeginning(); // sets curser at beginning of the list
-    void gotoEnd(); // sets curser at the end of the list
-    bool gotoNext(); // moves curser to the next item in the list
-    bool gotoPrior(); // moves curser to the previous item in the list
-    DataType getCursor() const; // returns the value stored at curser
+	void replace(const DataType&); //Replaces the data at the cursor with the parameter.
+	//Requires: A non-empty list, a DataType.
+	//Result: The value at the cursor is set to the input.
+	void clear(); //Uses a loop to remove every node.
+	//Requires: A non-empty list.
+	//Result: An empty list.
+	bool isEmpty() const; // returns true if head is null, false if head is not null
+	bool isFull() const; // returns true if head is not null, false if the head is null
+	void gotoBeginning(); // sets curser at beginning of the list
+	void gotoEnd(); // sets curser at the end of the list
+	bool gotoNext(); // moves curser to the next item in the list
+	bool gotoPrior(); // moves curser to the previous item in the list
+	DataType getCursor() const; // returns the value stored at curser
 	bool operator==(const List<DataType>&) const; //Equality operator, calls equalityHelper to check every node in both trees.
 	//Requires: Another List of the same DataType.
 	//Result: Returns the equality of the two Lists.
@@ -66,13 +70,13 @@ public:
 
 	// Programming exercise 3
 	// void insertBefore(const DataType& newDataItem) throw (logic_error);
-    
-    void showStructure() const;
+
+	void showStructure() const;
 
 private:
 
-    ListNode<DataType>* head;
-    ListNode<DataType>* cursor;
+	ListNode<DataType>* head;
+	ListNode<DataType>* cursor;
 
 };
 
@@ -116,6 +120,12 @@ List<DataType>& List<DataType>::operator=(const List<DataType>& other)
 }
 
 template <typename DataType>
+List<DataType>::~List()
+{
+	clear();
+}
+
+template <typename DataType>
 void List<DataType>::insert(const DataType& newDataItem)
 {
 	if (isEmpty())
@@ -152,6 +162,21 @@ void List<DataType>::remove()
 }
 
 template <typename DataType>
+void List<DataType>::replace(const DataType& input)
+{
+	cursor->dataItem = input;
+	return;
+}
+
+template <typename DataType>
+void List<DataType>::clear()
+{
+	while (NULL != head)
+		remove();
+	return;
+}
+
+template <typename DataType>
 bool List<DataType>::isEmpty() const
 {
 	if (head == NULL)
@@ -163,56 +188,59 @@ bool List<DataType>::isEmpty() const
 template <typename DataType>
 bool List<DataType>::isFull() const
 {
-	if (head == NULL)
-		return false;
-	else
-		return true;
+	return false;
 }
 
 template <typename DataType>
-void List<DataType>::gotoDeginning()
+void List<DataType>::gotoBeginning()
 {
-	curser = head;
+	cursor = head;
 	return;
 }
 
 template <typename DataType>
 void List<DataType>::gotoEnd()
 {
-	if (curser->next == NULL)
+	if (cursor->next == NULL)
 		return;
-	curser = curser->next;
+	cursor = cursor->next;
 	gotoEnd();
 }
 
 template <typename DataType>
-void List<DataType>::gotoNext()
+bool List<DataType>::gotoNext()
 {
-	curser = curser->next;
-	return;
+	if (cursor->next)
+	{
+		cursor = cursor->next;
+		return 1;
+	}
+	else
+		return 0;
 }
 
 template <typename DataType>
-void List<DataType>::gotoPrior()
+bool List<DataType>::gotoPrior()
 {
+	if (cursor == head)
+		return 0;
 	ListNode<DataType>* temp = head;
-	
-	while (temp != NULL && temp != curser)
+	while (temp != NULL && temp != cursor)
 	{
-		if (temp->next == curser)
+		if (temp->next == cursor)
 		{
-			curser = temp;
-			return;
+			cursor = temp;
+			return 1;
 		}
 		temp = temp->next;
 	}
-	return;
+	return 1;
 }
 
 template <typename DataType>
-DataType List<DtatType>::getCurser() const
+DataType List<DataType>::getCursor() const
 {
-	return *curser;
+	return cursor->dataItem;
 }
 
 template<typename DataType>
