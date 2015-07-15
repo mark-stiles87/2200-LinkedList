@@ -151,11 +151,24 @@ void List<DataType>::remove()
 		{
 			delete cursor->next;
 			cursor->next = temp;
+			if (gotoNext());
+			else
+				gotoBeginning();
 		}
 		else
 		{
-			head = cursor->next;
-			delete cursor;
+			if (temp)
+			{
+				head = temp;
+				delete cursor;
+				cursor = head;
+			}
+			else
+			{
+				delete head;
+				head = NULL;
+				cursor = NULL;
+			}
 		}
 	}
 	return;
