@@ -46,7 +46,7 @@ int main()
 	else
 	{
 		// Read in the slides one-by-one.
-		while (slideFile)
+		while (!slideFile.eof())
 		{
 			slideFile >> currSlide;
 			slideShow.insert(currSlide);
@@ -58,13 +58,8 @@ int main()
 		// Display the slide show slide-by-slide.
 		slideShow.gotoBeginning();
 
-		const int s = slideShow.getSize();
+		cout << currSlide;
 
-		for (int i = 0; i < s; i++)
-		{
-			cout << currSlide << endl;
-			slideShow.gotoNext();
-		}
 	}
 
 	return 0;
@@ -72,20 +67,28 @@ int main()
 
 istream& operator>> (istream& inFile, Slide& slide)
 {
+	char character;
+
 	for (int j = 0; j < slide.HEIGHT; j++)
 	{
 		for (int i = 0; i < slide.WIDTH; i++)
-			inFile >> slide.image[i][j];
+			inFile.get(character);
+			slide.image[j][i] = character;
 	}
 	return inFile;
 }
 
 ostream& operator<< (ostream& out, const Slide& slide)
 {
+	char character;
+
 	for (int j = 0; j < slide.HEIGHT; j++)
 	{
 		for (int i = 0; i < slide.WIDTH; i++)
-			out << slide.image[i][j];
+		{
+			character = slide.image[j][i];
+			cout << character;
+		}
 	}
 	return out;
 }
