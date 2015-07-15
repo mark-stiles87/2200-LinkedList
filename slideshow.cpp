@@ -59,7 +59,6 @@ int main()
 		slideShow.gotoBeginning();
 
 		cout << currSlide;
-
 	}
 
 	return 0;
@@ -67,10 +66,12 @@ int main()
 
 istream& operator>> (istream& inFile, Slide& slide)
 {
+	int count;
 	char character;
 
 	for (int j = 0; j < slide.HEIGHT; j++)
 	{
+		count++;
 		for (int i = 0; i < slide.WIDTH; i++)
 		{
 			inFile.get(character);
