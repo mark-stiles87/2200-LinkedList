@@ -72,8 +72,10 @@ istream& operator>> (istream& inFile, Slide& slide)
 	for (int j = 0; j < slide.HEIGHT; j++)
 	{
 		for (int i = 0; i < slide.WIDTH; i++)
+		{
 			inFile.get(character);
 			slide.image[j][i] = character;
+		}
 	}
 	return inFile;
 }
